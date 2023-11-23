@@ -4,22 +4,22 @@ Golfing will be pretty simple but different terrains and obstacles like sand tra
 Shoot fast and shoot well, your time and shots will both be tracked in the scoreboard.
 
 **Features and Functionalities:**
-1. Course Design: The game offers 5 unique golf courses with diverse terrains, including grass, sand and ice traps, and water hazards. Each course presents different challenges and strategies.
-2. Player Controls: Users can interact with the game through intuitive controls, adjusting the aim and power of their shots.
-3. Score Tracking: The game keeps track of the number of strokes and time per hole/level
-4. Obstacles and Hazards: The golf course is filled with obstacles like trees and walls. Hitting some of these obstacles may result in penalty strokes and time loss, adding a strategic layer to the game.
-5. Achievements and Rewards: Unlockable achievements recognize players for various in-game accomplishments. Rewards, such as new equipment or customization options, motivate players to achieve milestones.
+**1. Course Design:** The game offers 5 unique golf courses with diverse terrains, including grass, sand and ice traps, and water hazards. Each course presents different challenges and strategies.
+**2. Player Controls:** Users can interact with the game through intuitive controls, adjusting the aim and power of their shots.
+**3. Score Tracking:** The game keeps track of the number of strokes and time per hole/level
+**4. Obstacles and Hazards:** The golf course is filled with obstacles like trees and walls. Hitting some of these obstacles may result in penalty strokes and time loss, adding a strategic layer to the game.
+**5. Achievements and Rewards:** Unlockable achievements recognize players for various in-game accomplishments. Rewards, such as new equipment or customization options, motivate players to achieve milestones.
 
 **Domain Model Diagram**
 - **Conceptual Classes:**
-1. Player: Represents the human player participating in the game, storing their score and achievements.
-2. Golf Ball: Models the in-game character, influenced based on attributes such as skill level and experience points.
-3. Course: Defines the characteristics of a golf course, including its name, difficulty level, and various terrain types.
-4. Hole: Represents an individual hole on a golf course, storing information like par value, number, and specific obstacles.
-5. Obstacle: Represents different obstacles on the golf course, such as bunkers, trees, and water hazards, affecting gameplay.
-6. Scoreboard: Keeps track of the player's performance by recording the number of strokes per hole and the total score.
-7. Scorecard: Manages player’s score and displays it to the player
-8. Achievement: Represents in-game accomplishments, tracking the player's progress.
-9. Reward: Represents funny animations that play when the player achieves something
+**1. Player:** Represents the human player participating in the game, storing their score and achievements.
+**2. Golf Ball:** Models the in-game character, influenced based on attributes such as skill level and experience points.
+**3. Course:** Defines the characteristics of a golf course, including its name, difficulty level, and various terrain types.
+**4. Hole:** Represents an individual hole on a golf course, storing information like par value, number, and specific obstacles.
+**5. Obstacle:** Represents different obstacles on the golf course, such as bunkers, trees, and water hazards, affecting gameplay.
+**6. Scoreboard:** Keeps track of the player's performance by recording the number of strokes per hole and the total score.
+**7. Scorecard:** Manages player’s score and displays it to the player
+**8. Achievement:** Represents in-game accomplishments, tracking the player's progress.
+**9. Reward:** Represents funny animations that play when the player achieves something
 
 
