@@ -11,7 +11,7 @@ Shoot fast and shoot well, your time and shots will both be tracked in the score
 5. Achievements and Rewards: Unlockable achievements recognize players for various in-game accomplishments. Rewards, such as new equipment or customization options, motivate players to achieve milestones.
 
 **Domain Model Diagram**
-- **Conceptual Classes:**
+  **Conceptual Classes:**
   1. Player: Represents the human player participating in the game, storing their score and achievements.
   2. Golf Ball: Models the in-game character, influenced based on attributes such as skill level and experience points.
   3. Course: Defines the characteristics of a golf course, including its name, difficulty level, and various terrain types.
