@@ -12,14 +12,14 @@ Shoot fast and shoot well, your time and shots will both be tracked in the score
 
 **Domain Model Diagram**
 - **Conceptual Classes:**
-**1. Player:** Represents the human player participating in the game, storing their score and achievements.
-**2. Golf Ball:** Models the in-game character, influenced based on attributes such as skill level and experience points.
-**3. Course:** Defines the characteristics of a golf course, including its name, difficulty level, and various terrain types.
-**4. Hole:** Represents an individual hole on a golf course, storing information like par value, number, and specific obstacles.
-**5. Obstacle:** Represents different obstacles on the golf course, such as bunkers, trees, and water hazards, affecting gameplay.
-**6. Scoreboard:** Keeps track of the player's performance by recording the number of strokes per hole and the total score.
-**7. Scorecard:** Manages player’s score and displays it to the player
-**8. Achievement:** Represents in-game accomplishments, tracking the player's progress.
-**9. Reward:** Represents funny animations that play when the player achieves something
+  1. Player: Represents the human player participating in the game, storing their score and achievements.
+  2. Golf Ball: Models the in-game character, influenced based on attributes such as skill level and experience points.
+  3. Course: Defines the characteristics of a golf course, including its name, difficulty level, and various terrain types.
+  4. Hole: Represents an individual hole on a golf course, storing information like par value, number, and specific obstacles.
+  5. Obstacle: Represents different obstacles on the golf course, such as bunkers, trees, and water hazards, affecting gameplay.
+  6. Scoreboard: Keeps track of the player's performance by recording the number of strokes per hole and the total score.
+  7. Scorecard: Manages player’s score and displays it to the player
+  8. Achievement: Represents in-game accomplishments, tracking the player's progress.
+  9. Reward: Represents funny animations that play when the player achieves something
 
 
