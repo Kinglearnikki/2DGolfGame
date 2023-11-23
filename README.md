@@ -4,11 +4,11 @@ Golfing will be pretty simple but different terrains and obstacles like sand tra
 Shoot fast and shoot well, your time and shots will both be tracked in the scoreboard.
 
 **Features and Functionalities:**
-**1. Course Design:** The game offers 5 unique golf courses with diverse terrains, including grass, sand and ice traps, and water hazards. Each course presents different challenges and strategies.
-**2. Player Controls:** Users can interact with the game through intuitive controls, adjusting the aim and power of their shots.
-**3. Score Tracking:** The game keeps track of the number of strokes and time per hole/level
-**4. Obstacles and Hazards:** The golf course is filled with obstacles like trees and walls. Hitting some of these obstacles may result in penalty strokes and time loss, adding a strategic layer to the game.
-**5. Achievements and Rewards:** Unlockable achievements recognize players for various in-game accomplishments. Rewards, such as new equipment or customization options, motivate players to achieve milestones.
+1. Course Design: The game offers 5 unique golf courses with diverse terrains, including grass, sand and ice traps, and water hazards. Each course presents different challenges and strategies.
+2. Player Controls: Users can interact with the game through intuitive controls, adjusting the aim and power of their shots.
+3. Score Tracking: The game keeps track of the number of strokes and time per hole/level
+4. Obstacles and Hazards: The golf course is filled with obstacles like trees and walls. Hitting some of these obstacles may result in penalty strokes and time loss, adding a strategic layer to the game.
+5. Achievements and Rewards: Unlockable achievements recognize players for various in-game accomplishments. Rewards, such as new equipment or customization options, motivate players to achieve milestones.
 
 **Domain Model Diagram**
 - **Conceptual Classes:**
