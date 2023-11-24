@@ -26,14 +26,14 @@ def resetBall():
     ball.drag_line = []
 
 
-# Create screen
+# create screen with set width and height
 screen = pygame.display.set_mode((width, height))
 
 # Load and resize background image
 image = pygame.image.load(image_path)
 image = pygame.transform.scale(image, (width, height))
 
-# Set window caption
+# Window title 
 pygame.display.set_caption("2dGolf")
 
 # Create ball object
