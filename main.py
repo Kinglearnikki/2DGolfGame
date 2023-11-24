@@ -4,6 +4,9 @@ from ball import Ball
 from button import Button
 from hole import Hole
 
+from stickyball import StickyBall  # Import the SpecialBall class
+
+
 pygame.init()
 
 # Set window dimensions
@@ -26,18 +29,20 @@ def resetBall():
     ball.drag_line = []
 
 
-# create screen with set width and height
+# Create screen
 screen = pygame.display.set_mode((width, height))
 
 # Load and resize background image
 image = pygame.image.load(image_path)
 image = pygame.transform.scale(image, (width, height))
 
-# Window title 
+# Set window caption
 pygame.display.set_caption("2dGolf")
 
 # Create ball object
-ball = Ball(width // 2, height // 2, 20, (255, 255, 255))
+# ball = Ball(width // 2, height // 2, 20, (255, 255, 255))
+ball = StickyBall(width // 2, height // 2, 20, (255, 255, 255), "Special Attribute")
+
 
 # Create font object
 font = pygame.font.Font(None, 30)
@@ -104,6 +109,7 @@ while running:
     if distance_to_hole <= hole.radius:
         if distance_to_hole + ball.radius <= hole.radius:
             hole_message = "Ball in hole!"
+            ball.special_method()
             success_message = "Congrats!"
             ball.velocity = [0, 0]
         else:
