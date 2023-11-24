@@ -23,3 +23,13 @@ Shoot fast and shoot well, your time and shots will both be tracked in the score
   9. Reward: Represents funny animations that play when the player achieves something
 
 
+**TO DO**
+- Add timer
+- Add number of strokes
+- Add different levels
+- Add obstacles
+- Add different Balls with different attributes
+- Add terrains
+- Add scorecard
+- Add database to save scorecard
+- Add scoreboard (inside scoreboard kay ang sud sa scorecard na makuha sa database)
