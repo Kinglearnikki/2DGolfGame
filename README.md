@@ -2,7 +2,7 @@
 
 **TO DO**
 - Add timer
-- Add number of strokes
+- [DONE]Add number of strokes
 - Add different levels
 - Add obstacles
 - Add different Balls with different attributes
