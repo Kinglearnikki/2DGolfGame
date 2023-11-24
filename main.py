@@ -28,6 +28,9 @@ def resetBall():
     ball.velocity = [0, 0]
     ball.drag_line = []
 
+    global total_strokes
+    total_strokes = 0  # Reset total strokes
+
 
 # Create screen
 screen = pygame.display.set_mode((width, height))
@@ -49,17 +52,20 @@ font = pygame.font.Font(None, 30)
 
 # Set running flag
 running = True
-
+ball_hit = False
+ball_stopped = True
+ball_was_hit = False
 # Create reset button object
 reset_button = Button(10, 10, 100, 50, (0, 255, 0), "Reset", (255, 255, 255))
 
 # Create hole object
 hole = Hole(396, 80, 25, (0, 0, 0))
 
+
 # Initialize hole message and success message
 hole_message = ""
 success_message = ""
-
+total_strokes = 0
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -73,7 +79,9 @@ while running:
                 <= ball.radius**2
             ):
                 ball.dragging = True
+
                 ball.drag_line = [ball.current_pos]
+                ball_was_hit = True
 
             reset_button.handle_click(pygame.mouse.get_pos(), reset_ball=resetBall)
 
@@ -88,11 +96,18 @@ while running:
                 ball.handle_release(pygame.mouse.get_pos())
             ball.dragging = False
 
+            if (
+                ball_was_hit and ball.drag_line
+            ):  # Only increment if ball was hit and dragging line is present
+                total_strokes += 1
+                ball_was_hit = False  # Reset flag
+
     if ball.dragging:
         ball.drag_line.append(pygame.mouse.get_pos())
 
     if ball.velocity != [0, 0]:
         ball.dragging = False
+        ball.drag_line = []
 
     if ball.drag_line:
         for start, end in zip(ball.drag_line, ball.drag_line[1:]):
@@ -129,6 +144,13 @@ while running:
     success_text = font.render(success_message, True, (255, 0, 0))
     success_text_rect = success_text.get_rect(centerx=width // 2, bottom=height - 10)
     screen.blit(success_text, success_text_rect)
+
+    # Display stroke counter
+    total_strokes_text = font.render(
+        f"Total Strokes: {total_strokes}", True, (255, 255, 255)
+    )
+    total_strokes_text_rect = total_strokes_text.get_rect(topright=(width - 10, 10))
+    screen.blit(total_strokes_text, total_strokes_text_rect)
 
     mouse_pos_text = font.render(
         f"Mouse Position: {pygame.mouse.get_pos()}", True, (255, 255, 255)
