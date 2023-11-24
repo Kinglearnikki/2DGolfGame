@@ -1,4 +1,21 @@
 # GolfGame_OOP
+
+**TO DO**
+- Add timer
+- Add number of strokes
+- Add different levels
+- Add obstacles
+- Add different Balls with different attributes
+- Add terrains
+- Add scorecard
+- Add database to save scorecard
+- Add scoreboard (inside scoreboard kay ang sud sa scorecard na makuha sa database)
+
+
+
+-----------------------------------------------------------------------------------------------
+
+
 Get ready for a 2D golfing experience! Use your mouse to direct the ball and adjust your power. The objective of the game is to complete each hole in as few strokes and little time as possible while navigating through courses with varying obstacles that become more complex with each level.
 Golfing will be pretty simple but different terrains and obstacles like sand traps, water hazards, and various walls affect your ball differently, requiring a different strategy. Starting on an easier course, the difficulty ramps up with each level, introducing more challenging terrains and obstacles.
 Shoot fast and shoot well, your time and shots will both be tracked in the scoreboard.
@@ -23,13 +40,3 @@ Shoot fast and shoot well, your time and shots will both be tracked in the score
   9. Reward: Represents funny animations that play when the player achieves something
 
 
-**TO DO**
-- Add timer
-- Add number of strokes
-- Add different levels
-- Add obstacles
-- Add different Balls with different attributes
-- Add terrains
-- Add scorecard
-- Add database to save scorecard
-- Add scoreboard (inside scoreboard kay ang sud sa scorecard na makuha sa database)
