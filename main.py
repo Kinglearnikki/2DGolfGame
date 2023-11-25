@@ -45,6 +45,7 @@ pygame.display.set_caption("2dGolf")
 # Create ball object
 # ball = Ball(width // 2, height // 2, 20, (255, 255, 255))
 ball = StickyBall(width // 2, height // 2, 20, (255, 255, 255), "Special Attribute")
+ball.set_speed_multiplier(0.7)
 
 
 # Create font object
