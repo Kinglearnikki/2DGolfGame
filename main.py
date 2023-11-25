@@ -1,8 +1,10 @@
 import pygame
+import random
 import os
 from ball import Ball
 from button import Button
 from hole import Hole
+from obstacles import Obstacle
 
 from stickyball import StickyBall  # Import the SpecialBall class
 
@@ -44,8 +46,15 @@ pygame.display.set_caption("2dGolf")
 
 # Create ball object
 # ball = Ball(width // 2, height // 2, 20, (255, 255, 255))
-ball = StickyBall(width // 2, height // 2, 20, (255, 255, 255), "Special Attribute")
-ball.set_speed_multiplier(0.7)
+ball = StickyBall(
+    width // 2,
+    height // 2,
+    20,
+    (255, 255, 255),
+    "Special Attribute",
+    speed_multiplier=10,
+)
+# ball.set_speed_multiplier(10)
 
 
 # Create font object
@@ -62,7 +71,10 @@ reset_button = Button(10, 10, 100, 50, (0, 255, 0), "Reset", (255, 255, 255))
 # Create hole object
 hole = Hole(396, 80, 25, (0, 0, 0))
 
-
+obstacles = [
+    Obstacle(129, 289, 20, 100, (0, 0, 0)),  # Example red obstacle
+    # Add more obstacles here as needed
+]
 # Initialize hole message and success message
 hole_message = ""
 success_message = ""
@@ -116,7 +128,19 @@ while running:
 
     screen.blit(image, (0, 0))
 
+    # Update ball's position and check for collisions
+
     ball.update_position(screen=screen, width=width, height=height)
+    for obstacle in obstacles:
+        if (
+            ball.current_pos[0] + ball.radius >= obstacle.x
+            and ball.current_pos[0] - ball.radius <= obstacle.x + obstacle.width
+            and ball.current_pos[1] + ball.radius >= obstacle.y
+            and ball.current_pos[1] - ball.radius <= obstacle.y + obstacle.height
+        ):
+            # Ball collided with obstacle, adjust its velocity
+            ball.velocity[0] *= -1  # Reverse x velocity
+            ball.velocity[1] *= -1  # Reverse y velocity
 
     distance_to_hole = (
         (ball.current_pos[0] - hole.x) ** 2 + (ball.current_pos[1] - hole.y) ** 2
@@ -137,6 +161,9 @@ while running:
     hole.draw(screen)
     ball.draw(screen)
     reset_button.draw(screen)
+
+    for obstacle in obstacles:
+        obstacle.draw(screen, pygame=pygame)
 
     hole_text = font.render(hole_message, True, (255, 255, 255))
     hole_text_rect = hole_text.get_rect(bottomleft=(10, height - 10))

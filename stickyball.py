@@ -1,4 +1,5 @@
 from ball import Ball
+import random
 
 
 class StickyBall(Ball):
@@ -13,6 +14,8 @@ class StickyBall(Ball):
     ):
         super().__init__(x, y, radius, color)
         self.special_attribute = special_attribute
+        self.initial_speed_multiplier = speed_multiplier
+        self.speed_multiplier = speed_multiplier
 
     def special_method(self):
         print(f"This is a special ball with attribute: {self.special_attribute}")
