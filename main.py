@@ -1,12 +1,13 @@
 import pygame
-import random
+# import random
 import os
-from ball import Ball
+# from ball import Ball
 from button import Button
 from hole import Hole
 from obstacles import Obstacle
 
 from stickyball import StickyBall  # Import the SpecialBall class
+from slipperyball import SlipperyBall
 
 
 pygame.init()
@@ -23,7 +24,7 @@ image_path = os.path.join(current_directory, "images", "bg.png")
 
 
 # Reset ball function
-def resetBall():
+def resetball():
     ball.x = width // 2
     ball.y = height // 2
     ball.current_pos = [ball.x, ball.y]
@@ -51,10 +52,10 @@ ball = StickyBall(
     height // 2,
     20,
     (255, 255, 255),
-    "Special Attribute",
+    "Sticky",
     speed_multiplier=10,
 )
-# ball.set_speed_multiplier(10)
+ball.set_speed_multiplier(10)
 
 
 # Create font object
@@ -72,7 +73,7 @@ reset_button = Button(10, 10, 100, 50, (0, 255, 0), "Reset", (255, 255, 255))
 hole = Hole(396, 80, 25, (0, 0, 0))
 
 obstacles = [
-    Obstacle(129, 289, 20, 100, (0, 0, 0)),  # Example red obstacle
+    Obstacle(130, 290, 100, 100, (0, 0, 0)),  # Example red obstacle
     # Add more obstacles here as needed
 ]
 # Initialize hole message and success message
@@ -96,7 +97,7 @@ while running:
                 ball.drag_line = [ball.current_pos]
                 ball_was_hit = True
 
-            reset_button.handle_click(pygame.mouse.get_pos(), reset_ball=resetBall)
+            reset_button.handle_click(pygame.mouse.get_pos(), reset_ball=resetball)
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if (
@@ -139,8 +140,10 @@ while running:
             and ball.current_pos[1] - ball.radius <= obstacle.y + obstacle.height
         ):
             # Ball collided with obstacle, adjust its velocity
-            ball.velocity[0] *= -1  # Reverse x velocity
-            ball.velocity[1] *= -1  # Reverse y velocity
+            ball.velocity[0] *= 0  # Reverse x velocity
+            ball.velocity[1] *= 0  # Reverse y velocity
+
+            ball.handle_collision(screen_width=width, screen_height=height, obstacles=obstacles)
 
     distance_to_hole = (
         (ball.current_pos[0] - hole.x) ** 2 + (ball.current_pos[1] - hole.y) ** 2

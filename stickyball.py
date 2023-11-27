@@ -1,5 +1,5 @@
 from ball import Ball
-import random
+# import random
 
 
 class StickyBall(Ball):
@@ -49,6 +49,60 @@ class StickyBall(Ball):
                 self.velocity = [0, 0]
 
             self.dragging = False
+
+    def handle_collision(self, screen_width, screen_height, obstacles):
+        # Check collision with screen boundaries
+        if (
+                self.current_pos[0] - self.radius < 0
+                or self.current_pos[0] + self.radius > screen_width
+        ):
+            self.velocity[0] = 0  # Stop horizontal movement
+
+        if (
+                self.current_pos[1] - self.radius < 0
+                or self.current_pos[1] + self.radius > screen_height
+        ):
+            self.velocity[1] = 0  # Stop vertical movement
+
+        # Check collision with obstacles
+        for obstacle in obstacles:
+            if (
+                    self.current_pos[0] + self.radius >= obstacle.x
+                    and self.current_pos[0] - self.radius <= obstacle.x + obstacle.width
+                    and self.current_pos[1] + self.radius >= obstacle.y
+                    and self.current_pos[1] - self.radius <= obstacle.y + obstacle.height
+            ):
+                # Determine the direction of the overlap
+                overlap_x = max(
+                    0,
+                    min(
+                        self.current_pos[0] + self.radius - obstacle.x,
+                        obstacle.x + obstacle.width - (self.current_pos[0] - self.radius),
+                        ),
+                )
+                overlap_y = max(
+                    0,
+                    min(
+                        self.current_pos[1] + self.radius - obstacle.y,
+                        obstacle.y + obstacle.height - (self.current_pos[1] - self.radius),
+                        ),
+                )
+
+                # Determine the direction of the overlap
+                if overlap_x < overlap_y:
+                    # Resolve collision in the x-direction
+                    if self.velocity[0] > 0:
+                        self.current_pos[0] = obstacle.x - self.radius
+                    else:
+                        self.current_pos[0] = obstacle.x + obstacle.width + self.radius
+                    self.velocity[0] = 0  # Stop horizontal movement
+                else:
+                    # Resolve collision in the y-direction
+                    if self.velocity[1] > 0:
+                        self.current_pos[1] = obstacle.y - self.radius
+                    else:
+                        self.current_pos[1] = obstacle.y + obstacle.height + self.radius
+                    self.velocity[1] = 0  # Stop vertical movement
 
     def set_speed_multiplier(self, multiplier: int):
         self.speed_multiplier = multiplier
