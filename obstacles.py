@@ -7,7 +7,7 @@ class Obstacle:
         self.color = color
         self.orientation = orientation
 
-    def draw(self, screen, pygame):  # Pass pygame as an argument
+    def draw(self, screen, pygame): 
         if self.orientation == "vertical":
             pygame.draw.rect(
                 screen, self.color, (self.x, self.y, self.width, self.height)
