@@ -25,3 +25,4 @@ class Button:
             self.y <= mouse_pos[1] <= self.y + self.height
         ):
             reset_ball()
+            
