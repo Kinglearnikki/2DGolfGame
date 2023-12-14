@@ -1,0 +1,50 @@
+[
+    {
+        "date": "2023-12-14 16:41:16",
+        "level": "main_game",
+        "time": "00:25",
+        "strokes": 3
+    },
+    {
+        "date": "2023-12-14 16:42:09",
+        "level": "level_1",
+        "time": "00:31",
+        "strokes": 3
+    },
+    {
+        "date": "2023-12-14 17:09:13",
+        "level": "main_game",
+        "time": "01:11",
+        "strokes": 6
+    },
+    {
+        "date": "2023-12-14 17:12:16",
+        "level": "main_game",
+        "time": "00:13",
+        "strokes": 2
+    },
+    {
+        "date": "2023-12-14 17:13:29",
+        "level": "main_game",
+        "time": "00:48",
+        "strokes": 5
+    },
+    {
+        "date": "2023-12-14 17:15:00",
+        "level": "level_1",
+        "time": "01:24",
+        "strokes": 8
+    },
+    {
+        "date": "2023-12-14 17:16:27",
+        "level": "main_game",
+        "time": "00:23",
+        "strokes": 3
+    },
+    {
+        "date": "2023-12-14 17:22:03",
+        "level": "main_game",
+        "time": "00:49",
+        "strokes": 4
+    }
+]
