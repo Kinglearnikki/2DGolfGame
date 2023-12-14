@@ -29,6 +29,17 @@ class Ball:
                 + (self.current_pos[1] - mouse_pos[1]) ** 2
             ) ** 0.5
 
+            # Define minimum and maximum aiming line lengths
+            min_aiming_line_length = 10  # Set your desired minimum length here
+            max_aiming_line_length = 40  # Set your desired maximum length here
+
+            if drag_distance < min_aiming_line_length:
+                # Ensure minimum aiming line length
+                drag_distance = min_aiming_line_length
+            elif drag_distance > max_aiming_line_length:
+                # Cap aiming line length to the maximum
+                drag_distance = max_aiming_line_length
+
             drag_direction = [
                 self.current_pos[0] - mouse_pos[0],
                 self.current_pos[1] - mouse_pos[1],
@@ -36,11 +47,22 @@ class Ball:
 
             if drag_distance != 0:
                 drag_direction = [i / drag_distance for i in drag_direction]
-                self.velocity = [i * drag_distance * 0.2 for i in drag_direction]
+                # Calculate the velocity
+                calculated_velocity = [
+                    i * drag_distance * 0.05
+                    for i in drag_direction
+                ]
+
+                self.velocity = calculated_velocity  # Update the ball's velocity
             else:
                 self.velocity = [0, 0]
 
             self.dragging = False
+
+        self.current_pos[0] += self.velocity[0] * 0.08
+        self.current_pos[1] += self.velocity[1] * 0.08
+        self.velocity[0] *= 0.99
+        self.velocity[1] *= 0.99
 
     def update_position(self, screen, width, height):
         if self.dragging:
