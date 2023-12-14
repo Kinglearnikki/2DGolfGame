@@ -6,6 +6,8 @@ from hole import Hole
 from obstacles import Obstacle
 from gamestate import GameState
 from stickyball import StickyBall
+from normalBall import NormalBall
+
 # from slipperyball import SlipperyBall
 
 # Pygame initialization
@@ -34,27 +36,19 @@ pygame.display.set_caption("2dGolf")
 font = pygame.font.Font(None, 30)
 
 # Create ball object
-ball = Ball(width // 2, height // 2, 20, (255, 255, 255))
-# ball = StickyBall(
-#     width  //  2,
-#     height //  2,
-#     20,
-#     (255, 255, 255),
-#     "Sticky",
-#     speed_multiplier=10,
-# )
-# ball.set_speed_multiplier(10)
+ball = NormalBall(width // 2, height // 2, 20, (255, 255, 255), 1)
+
 
 # Reset ball function
-def resetball():
+def resetball(game_state):
     ball.x = width // 2
     ball.y = height // 2
     ball.current_pos = [ball.x, ball.y]
     ball.speed = [0, 0]
     ball.drag_line = []
 
-    global total_strokes
-    total_strokes = 0  # Reset total strokes
+    game_state.reset_strokes()
+
 
 reset_ball = resetball
 
@@ -82,12 +76,16 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Handle mouse button down event
-            game_state.handle_mouse_button_down(event, ball, reset_button, reset_ball)
+            game_state.handle_mouse_button_down(
+                event, ball, reset_button, reset_ball, game_state
+            )
         elif event.type == pygame.MOUSEBUTTONUP:
             # Handle mouse button up event
             game_state.handle_mouse_button_up(event, ball)
 
-    game_state.state_manager(ball, obstacles, screen, hole, reset_button, font, width, height, reset_ball)
+    game_state.state_manager(
+        ball, obstacles, screen, hole, reset_button, font, width, height, reset_ball
+    )
 
     pygame.display.flip()
 

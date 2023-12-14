@@ -21,13 +21,6 @@ class Ball:
             self.radius,
         )
 
-    def reset_position(self):
-        # Reset the position of the ball to its initial position
-        self.current_pos = [self.x, self.y]  # Replace with your actual initial position
-        self.speed = [0, 0]  # Reset speed to zero
-        self.dragging = False  # Reset dragging state
-        self.drag_line = []  # Clear the drag line
-
     def handle_release(self, mouse_pos):
         if self.dragging and (self.speed[0] ** 2 + self.speed[1] ** 2 < 1):
             # Add current ball position to drag_line list
@@ -120,16 +113,26 @@ class Ball:
 
     def reverse_speed(self, obstacle):
         # Reverse speed components based on the collision
-        if self.current_pos[0] == obstacle.x - self.radius or self.current_pos[0] == obstacle.x + obstacle.width + self.radius:
+        if (
+            self.current_pos[0] == obstacle.x - self.radius
+            or self.current_pos[0] == obstacle.x + obstacle.width + self.radius
+        ):
             self.speed[0] *= -1  # Reverse x speed
-        if self.current_pos[1] == obstacle.y - self.radius or self.current_pos[1] == obstacle.y + obstacle.height + self.radius:
+        if (
+            self.current_pos[1] == obstacle.y - self.radius
+            or self.current_pos[1] == obstacle.y + obstacle.height + self.radius
+        ):
             self.speed[1] *= -1  # Reverse y speed
 
     def is_aabb_collision(self, obstacle):
         # Axis Aligned Bounding Box
-        x_collision = (math.fabs(self.current_pos[0] - obstacle.x) * 2) < (self.radius + obstacle.width)
-        y_collision = (math.fabs(self.current_pos[1] - obstacle.y) * 2) < (self.radius + obstacle.height)
-        return (x_collision and y_collision)
+        x_collision = (math.fabs(self.current_pos[0] - obstacle.x) * 2) < (
+            self.radius + obstacle.width
+        )
+        y_collision = (math.fabs(self.current_pos[1] - obstacle.y) * 2) < (
+            self.radius + obstacle.height
+        )
+        return x_collision and y_collision
 
     def handle_collision(self, screen_width, screen_height, obstacles):
         # Check for collisions with obstacles
@@ -141,3 +144,10 @@ class Ball:
 
         # Check for collisions with window edges
         self.update_position(screen_width, screen_height)
+
+    def reset_position(self):
+        # Reset the position of the ball to its initial position
+        self.current_pos = [self.x, self.y]  # Replace with your actual initial position
+        self.speed = [0, 0]  # Reset speed to zero
+        self.dragging = False  # Reset dragging state
+        self.drag_line = []  # Clear the drag line
