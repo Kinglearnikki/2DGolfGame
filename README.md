@@ -5,6 +5,8 @@
 - [DONE]Add timer
 - [DONE]Add number of strokes
 - Add different levels
+- Add menu to enter different levels
+- [In progress: Clive]Add back to main menu button (in each level) 
 - Add obstacles
 - Add different Balls with different attributes
 - Add terrains
