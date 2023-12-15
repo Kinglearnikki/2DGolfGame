@@ -1,7 +1,7 @@
 # GolfGame_OOP
 
 **TO DO**
-*Updated Dec 15, 2023 7:43PM*
+*Updated Dec 15, 2023 8:13PM*
 - [DONE]Add timer
 - [DONE]Add number of strokes
 - Add different levels
