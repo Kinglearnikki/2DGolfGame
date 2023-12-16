@@ -75,7 +75,7 @@ class GameState:
         secs = int(seconds % 60)
         return f"{mins:02d}:{secs:02d}"
 
-    def intro(self, screen, width, height):
+    def intro(self, screen, width, height, font):
         # Set image path
         current_directory = os.getcwd()
         image_path = os.path.join(current_directory, "images", "bg.png")
@@ -481,23 +481,60 @@ class GameState:
         )
 
     def handle_mouse_button_down(
-        self, event, ball, reset_button, reset_ball, game_state
-    ):
+        self, event, ball=None, reset_button=None, reset_ball=None):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if (
-                ball.speed[0] ** 2 + ball.speed[1] ** 2 < 1
-                and ball.dragging is False
-                and (ball.current_pos[0] - event.pos[0]) ** 2
-                + (ball.current_pos[1] - event.pos[1]) ** 2
-                <= ball.radius**2
-            ):
-                ball.dragging = True
-                ball.drag_line = [ball.current_pos]
-                self.ball_was_hit = True
+            if self.state == "intro":
+                pass
+            elif self.state == "main_game":
+                if (
+                    ball.speed[0] ** 2 + ball.speed[1] ** 2 < 1
+                    and ball.dragging is False
+                    and (ball.current_pos[0] - event.pos[0]) ** 2
+                    + (ball.current_pos[1] - event.pos[1]) ** 2
+                    <= ball.radius**2
+                ):
+                    ball.dragging = True
+                    ball.drag_line = [ball.current_pos]
+                    self.ball_was_hit = True
+                reset_button.handle_click(pygame.mouse.get_pos(), reset_ball)
+            elif self.state == "level_1":
+                if (
+                    ball.speed[0] ** 2 + ball.speed[1] ** 2 < 1
+                    and ball.dragging is False
+                    and (ball.current_pos[0] - event.pos[0]) ** 2
+                    + (ball.current_pos[1] - event.pos[1]) ** 2
+                    <= ball.radius**2
+                ):
+                    ball.dragging = True
+                    ball.drag_line = [ball.current_pos]
+                    self.ball_was_hit = True
+                reset_button.handle_click(pygame.mouse.get_pos(), reset_ball)
+            elif self.state == "level_2":
+                if (
+                    ball.speed[0] ** 2 + ball.speed[1] ** 2 < 1
+                    and ball.dragging is False
+                    and (ball.current_pos[0] - event.pos[0]) ** 2
+                    + (ball.current_pos[1] - event.pos[1]) ** 2
+                    <= ball.radius**2
+                ):
+                    ball.dragging = True
+                    ball.drag_line = [ball.current_pos]
+                    self.ball_was_hit = True
+                reset_button.handle_click(pygame.mouse.get_pos(), reset_ball)
+            elif self.state == "level_3":
+                if (
+                    ball.speed[0] ** 2 + ball.speed[1] ** 2 < 1
+                    and ball.dragging is False
+                    and (ball.current_pos[0] - event.pos[0]) ** 2
+                    + (ball.current_pos[1] - event.pos[1]) ** 2
+                    <= ball.radius**2
+                ):
+                    ball.dragging = True
+                    ball.drag_line = [ball.current_pos]
+                    self.ball_was_hit = True
+                reset_button.handle_click(pygame.mouse.get_pos(), reset_ball)
 
-            reset_button.handle_click(
-                pygame.mouse.get_pos(), reset_ball=lambda: reset_ball(game_state)
-            )
+            
 
     def handle_mouse_button_up(self, event, ball):
         if event.type == pygame.MOUSEBUTTONUP:
