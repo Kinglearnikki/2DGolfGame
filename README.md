@@ -1,13 +1,14 @@
 # GolfGame_OOP
 
 **TO DO**
-_Updated Dec 15, 2023 8:13PM_
+_Updated Dec 17, 2023 11:10PM_
 
 - [DONE]Add timer
 - [DONE]Add number of strokes
 - Add different levels
 - Add menu to enter different levels
-- [In progress: Clive]Add back to main menu button (in each level)
+- [DONE]Add back to main menu button (in each level)
+- [DONE]Fix timer to reset when back and reset button are pressed
 - Add obstacles
 - Add different Balls with different attributes
 - Add terrains
