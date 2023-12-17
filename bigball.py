@@ -2,7 +2,7 @@ import os
 import pygame
 from ball import Ball
 
-class NormalBall(Ball):
+class BigBall(Ball):
     def __init__(
         self,
         x: int,

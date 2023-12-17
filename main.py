@@ -7,6 +7,7 @@ from obstacles import Obstacle
 from gamestate import GameState
 from stickyball import StickyBall
 from normalBall import NormalBall
+from bigball import BigBall
 
 # Pygame initialization
 pygame.init()
@@ -34,10 +35,10 @@ pygame.display.set_caption("2dGolf")
 font = pygame.font.Font(None, 30)
 
 # Create ball object
-ball_main_game = NormalBall(width // 2, height // 2, 20, (255, 255, 255), 1)
-ball_level1 = StickyBall(width // 2, height // 2, 20, (255, 255, 255), 1)
-ball_level2 = StickyBall(width // 2, height // 2, 20, (255, 255, 255), 1)
-ball_level3 = StickyBall(width // 2, height // 2, 20, (255, 255, 255), 1)
+ball_main_game = NormalBall(width // 2, height // 2, 10, "golfball.png", 1)
+ball_level1 = StickyBall(width // 2, height // 2, 10, "slimeball.png", "attribute_2", 1)
+ball_level2 = BigBall(width // 2, height // 2, 20, "golfball.png", 1)
+ball_level3 = StickyBall(width // 2, height // 2, 10, "slimeball.png", "attribute_4", 1)
 
 # Function to reset ball for different levels
 def reset_ball(game_state, ball):
