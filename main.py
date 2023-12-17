@@ -1,7 +1,7 @@
 import pygame
 import os
 from ball import Ball
-from button import Button
+from button import Button, BackButton
 from hole import Hole
 from obstacles import Obstacle
 from gamestate import GameState
@@ -15,6 +15,10 @@ pygame.init()
 # Set window dimensions
 width, height = 800, 600
 
+# Set window dimensions
+width, height = 800, 600
+
+# Get current directory
 # Get current directory
 current_directory = os.getcwd()
 
@@ -29,8 +33,10 @@ image = pygame.image.load(image_path)
 image = pygame.transform.scale(image, (width, height))
 
 # Set window caption
+# Set window caption
 pygame.display.set_caption("2dGolf")
 
+# Create font object
 # Create font object
 font = pygame.font.Font(None, 30)
 
@@ -65,6 +71,7 @@ reset_ball_level3 = lambda:  reset_ball(game_state, ball_level3)
 # Create hole object
 hole = Hole(396, 80, 25, (0, 0, 0))
 
+# Create obstacles
 # Create obstacles
 obstacles = [
     Obstacle(130, 290, 50, 100, (0, 0, 0), orientation="vertical"),

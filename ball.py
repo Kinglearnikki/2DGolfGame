@@ -1,5 +1,6 @@
 import pygame
 import math
+import math
 
 
 class Ball:
@@ -8,6 +9,7 @@ class Ball:
         self.y = y
         self.radius = radius
         self.color = color
+        self.speed = [0, 0]
         self.speed = [0, 0]
         self.current_pos = [x, y]
         self.dragging = False
@@ -24,8 +26,11 @@ class Ball:
     def handle_release(self, mouse_pos):
         if self.dragging and (self.speed[0] ** 2 + self.speed[1] ** 2 < 1):
             # Add current ball position to drag_line list
+        if self.dragging and (self.speed[0] ** 2 + self.speed[1] ** 2 < 1):
+            # Add current ball position to drag_line list
             self.drag_line.append(self.current_pos)
 
+            # Calculate the distance and direction of the mouse drag
             # Calculate the distance and direction of the mouse drag
             drag_distance = (
                 (self.current_pos[0] - mouse_pos[0]) ** 2
@@ -38,12 +43,17 @@ class Ball:
             ]
 
             # Check if drag_distance is not zero
+            # Check if drag_distance is not zero
             if drag_distance != 0:
+                # Normalize the direction vector
                 # Normalize the direction vector
                 drag_direction = [i / drag_distance for i in drag_direction]
                 # Make the speed proportional to the drag distance and in the direction of the drag
                 self.speed = [i * drag_distance * 0.2 for i in drag_direction]
+                # Make the speed proportional to the drag distance and in the direction of the drag
+                self.speed = [i * drag_distance * 0.2 for i in drag_direction]
             else:
+                self.speed = [0, 0]
                 self.speed = [0, 0]
 
             self.dragging = False
@@ -62,12 +72,21 @@ class Ball:
         self.current_pos[1] += self.speed[1] * 0.08  # Apply y speed every frame
         self.speed[0] *= 0.99  # Slow down x speed over time
         self.speed[1] *= 0.99  # Slow down y speed over time
+        self.current_pos[0] += self.speed[0] * 0.08  # Apply x speed every frame
+        self.current_pos[1] += self.speed[1] * 0.08  # Apply y speed every frame
+        self.speed[0] *= 0.99  # Slow down x speed over time
+        self.speed[1] *= 0.99  # Slow down y speed over time
 
+        if self.speed[0] ** 2 + self.speed[1] ** 2 < 0.01:
+            self.speed = [0, 0]
         if self.speed[0] ** 2 + self.speed[1] ** 2 < 0.01:
             self.speed = [0, 0]
 
         # Check collision with window edges
+        # Check collision with window edges
         if self.current_pos[0] - self.radius <= 0:
+            self.current_pos[0] = self.radius  # Keep the ball within the left edge
+            self.speed[0] *= -1  # Reverse x speed
             self.current_pos[0] = self.radius  # Keep the ball within the left edge
             self.speed[0] *= -1  # Reverse x speed
         elif self.current_pos[0] + self.radius >= width:
@@ -75,8 +94,12 @@ class Ball:
                 width - self.radius
             )  # Keep the ball within the right edge
             self.speed[0] *= -1  # Reverse x speed
+            )  # Keep the ball within the right edge
+            self.speed[0] *= -1  # Reverse x speed
 
         if self.current_pos[1] - self.radius <= 0:
+            self.current_pos[1] = self.radius  # Keep the ball within the top edge
+            self.speed[1] *= -1  # Reverse y speed
             self.current_pos[1] = self.radius  # Keep the ball within the top edge
             self.speed[1] *= -1  # Reverse y speed
         elif self.current_pos[1] + self.radius >= height:

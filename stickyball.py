@@ -2,6 +2,9 @@ import os
 import pygame
 from ball import Ball
 
+# import random
+
+
 class StickyBall(Ball):
     def __init__(
         self,

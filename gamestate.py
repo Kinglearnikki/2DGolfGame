@@ -10,6 +10,7 @@ from obstacles import Obstacle
 class GameState:
     def __init__(self):
         self.state = "intro"
+        self.state = "intro"
         self.ball_hit = False
         self.ball_stopped = True
         self.ball_was_hit = False
@@ -19,6 +20,44 @@ class GameState:
         self.timer_running = False
         self.start_time = 0
         self.elapsed_time = 0
+
+    def format_date_time(self, date_str):
+        # Parse the datetime from the JSON data
+        full_datetime = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+        date_formatted = full_datetime.strftime("%Y-%m-%d")  # Format the date
+        time_formatted = full_datetime.strftime("%I:%M %p")  # Format the time
+
+        return date_formatted, time_formatted
+
+    def read_game_data(self):
+        try:
+            with open("game_data.json", "r") as json_file:
+                return json.load(json_file)
+        except FileNotFoundError:
+            return []
+
+    def save_game_data(self, level, formatted_time, strokes):
+        game_data = {
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "level": level,
+            "time": formatted_time,
+            "strokes": strokes,
+        }
+
+        # Check if the file exists and read existing data
+        try:
+            with open("game_data.json", "r") as json_file:
+                existing_data = json.load(json_file)
+        except FileNotFoundError:
+            existing_data = []
+
+        # Append new game data to existing data
+        existing_data.append(game_data)
+
+        # Write updated data back to the file
+        with open("game_data.json", "w") as json_file:
+            json.dump(existing_data, json_file, indent=4)
+
 
     def format_date_time(self, date_str):
         # Parse the datetime from the JSON data
@@ -69,16 +108,20 @@ class GameState:
         if self.timer_running:
             self.elapsed_time = time.time() - self.start_time
 
+    def reset_timer(self, stop_timer):
+        stop_timer()
+        self.elapsed_time = 0
+
     def format_time(self, seconds):
         # Format the time into minutes and seconds
         mins = int(seconds // 60)
         secs = int(seconds % 60)
         return f"{mins:02d}:{secs:02d}"
 
-    def intro(self, screen, width, height, font):
+    def intro(self, screen, width, height):
         # Set image path
         current_directory = os.getcwd()
-        image_path = os.path.join(current_directory, "images", "bg.png")
+        image_path = os.path.join(current_directory, "2DGolfGame\images", "bg.png")
 
         # Load and resize background image
         image = pygame.image.load(image_path)
@@ -87,7 +130,9 @@ class GameState:
         # Set background color or image for the intro screen
         screen.blit(image, (0, 0))
 
+
         # Display the title
+        title_font = pygame.font.SysFont("arial", 100)  # (font, size)
         title_font = pygame.font.SysFont("arial", 100)  # (font, size)
         title_text = title_font.render("2D Golf Game", True, (255, 255, 255))
         title_rect = title_text.get_rect(center=(width // 2, height // 3 - 50))
@@ -112,6 +157,11 @@ class GameState:
         mouse_pos = pygame.mouse.get_pos()
         if button_rect.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0]:
+                self.state = "main_game"
+
+        elif scoreboard_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                self.state = "scoreboard"
                 self.state = "main_game"
 
         elif scoreboard_rect.collidepoint(mouse_pos):
@@ -191,7 +241,7 @@ class GameState:
             )
 
             row_y += 30
-
+        # formatting for the button
         back_button_font = pygame.font.Font(None, 30)
         back_button_text = back_button_font.render("Back", True, (255, 255, 255))
         back_button_rect = back_button_text.get_rect()
@@ -202,6 +252,7 @@ class GameState:
         )  # Blue button
         screen.blit(back_button_text, back_button_rect)
 
+        # update the screen
         pygame.display.flip()
 
         # Handle events for the "Back" button
@@ -235,6 +286,7 @@ class GameState:
         obstacles,
         screen,
         hole,
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -243,7 +295,7 @@ class GameState:
     ):
         # Set image path
         current_directory = os.getcwd()
-        image_path = os.path.join(current_directory, "images", "bg.png")
+        image_path = os.path.join(current_directory, "2DGolfGame\images", "bg.png")
 
         # Load and resize background image
         image = pygame.image.load(image_path)
@@ -276,7 +328,13 @@ class GameState:
                 ball.reverse_speed(obstacle)
 
                 if hasattr(ball, "special_attribute"):
+                if hasattr(ball, "special_attribute"):
                     if ball.special_attribute == "Sticky":
+                        ball.handle_collision(
+                            screen_width=width,
+                            screen_height=height,
+                            obstacles=obstacles,
+                        )
                         ball.handle_collision(
                             screen_width=width,
                             screen_height=height,
@@ -287,6 +345,7 @@ class GameState:
         screen.blit(image, (0, 0))
 
         self.manage_timer(screen, font, width)
+        self.manage_timer(screen, font, width)
 
         # Update ball's position and check for collisions
         ball.update_position(screen=screen, width=width, height=height)
@@ -294,9 +353,11 @@ class GameState:
         hole.draw(screen)
         ball.draw(screen)
         reset_button.draw(screen)
+        mainMenu_button.draw(screen)
 
         for obstacle in obstacles:
             obstacle.draw(screen, pygame=pygame)
+
 
         distance_to_hole = (
             (ball.current_pos[0] - hole.x) ** 2 + (ball.current_pos[1] - hole.y) ** 2
@@ -316,12 +377,33 @@ class GameState:
 
                     self.save_game_data(self.state, formatted_time, self.total_strokes)
 
+                if self.timer_running:
+                    self.stop_timer()
+                    formatted_time = self.format_time(self.elapsed_time)
+                    print(f"time: {formatted_time}")
+                    print(f"strokes: {self.total_strokes}")
+
+                    self.save_game_data(self.state, formatted_time, self.total_strokes)
+
                 # Increment the total strokes only for the first successful hit
                 if not self.ball_hit:
+                    # self.total_strokes += 1
                     # self.total_strokes += 1
                     self.ball_hit = True
 
                 # Display the next level button
+                next_level_button_rect = pygame.Rect(
+                    width // 2 - 50, height // 2 + 70, 100, 40
+                )
+                pygame.draw.rect(
+                    screen, (0, 128, 255), next_level_button_rect
+                )  # Blue button
+                next_level_text = button_font.render(
+                    "Next Level", True, (255, 255, 255)
+                )
+                next_level_text_rect = next_level_text.get_rect(
+                    center=next_level_button_rect.center
+                )
                 next_level_button_rect = pygame.Rect(
                     width // 2 - 50, height // 2 + 70, 100, 40
                 )
@@ -343,6 +425,7 @@ class GameState:
                         # Reset ball position
                         ball.reset_position()
 
+
                         # Go to the next level
                         if self.state == "main_game":
                             self.state = "level_1"
@@ -351,7 +434,15 @@ class GameState:
                         elif self.state == "level_2":
                             self.state = "level_3"
                         elif self.state == "level_3":
+                        if self.state == "main_game":
+                            self.state = "level_1"
+                        elif self.state == "level_1":
+                            self.state = "level_2"
+                        elif self.state == "level_2":
+                            self.state = "level_3"
+                        elif self.state == "level_3":
                             # You can add logic for game completion or loop back to the first level
+                            self.state = "intro"
                             self.state = "intro"
 
                         # Reset ball and other relevant parameters for the new level
@@ -366,12 +457,16 @@ class GameState:
         else:
             self.hole_message = ""
             self.success_message = ""
+            self.success_message = ""
 
         hole_text = font.render(self.hole_message, True, (255, 255, 255))
         hole_text_rect = hole_text.get_rect(bottomleft=(10, height - 10))
         screen.blit(hole_text, hole_text_rect)
 
         success_text = font.render(self.success_message, True, (255, 0, 0))
+        success_text_rect = success_text.get_rect(
+            centerx=width // 2, bottom=height - 10
+        )
         success_text_rect = success_text.get_rect(
             centerx=width // 2, bottom=height - 10
         )
@@ -403,6 +498,7 @@ class GameState:
         obstacles,
         screen,
         hole,
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -417,11 +513,15 @@ class GameState:
         obstacles.append(
             Obstacle(300, 180, 200, 10, (0, 0, 0), orientation="horizontal")
         )
+        obstacles.append(
+            Obstacle(300, 180, 200, 10, (0, 0, 0), orientation="horizontal")
+        )
 
+        self.manage_timer(screen, font, width)
         self.manage_timer(screen, font, width)
         # Call the common main_game method
         self.main_game(
-            ball, obstacles, screen, hole, reset_button, font, width, height, reset_ball
+            ball, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball
         )
 
     def level_2(
@@ -430,6 +530,7 @@ class GameState:
         obstacles,
         screen,
         hole,
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -444,11 +545,15 @@ class GameState:
         obstacles.append(
             Obstacle(500, 188, 200, 10, (0, 0, 0), orientation="horizontal")
         )
+        obstacles.append(
+            Obstacle(500, 188, 200, 10, (0, 0, 0), orientation="horizontal")
+        )
 
+        self.manage_timer(screen, font, width)
         self.manage_timer(screen, font, width)
         # Call the common main_game method
         self.main_game(
-            ball, obstacles, screen, hole, reset_button, font, width, height, reset_ball
+            ball, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball
         )
 
     def level_3(
@@ -457,6 +562,7 @@ class GameState:
         obstacles,
         screen,
         hole,
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -473,15 +579,23 @@ class GameState:
         obstacles.append(
             Obstacle(500, 188, 200, 10, (0, 0, 0), orientation="horizontal")
         )
+        obstacles.append(
+            Obstacle(300, 188, 200, 10, (0, 0, 0), orientation="horizontal")
+        )
+        obstacles.append(
+            Obstacle(500, 188, 200, 10, (0, 0, 0), orientation="horizontal")
+        )
 
+        self.manage_timer(screen, font, width)
         self.manage_timer(screen, font, width)
         # Call the common main_game method
         self.main_game(
-            ball, obstacles, screen, hole, reset_button, font, width, height, reset_ball
+            ball, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball
         )
 
     def handle_mouse_button_down(
-        self, event, ball=None, reset_button=None, reset_ball=None):
+        self, event, ball, mainMenu_button, reset_button, reset_ball, game_state, reset_timer
+    ):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.state == "intro":
                 pass
@@ -550,8 +664,21 @@ class GameState:
                     > ball.radius**2
                 ):
                     ball.handle_release(pygame.mouse.get_pos())
+            if ball.dragging:
+                if (
+                    not self.timer_running
+                ):  # Start the timer only if it's not already running
+                    self.start_timer()
+                if (
+                    ball.speed[0] ** 2 + ball.speed[1] ** 2 < 0.01**2
+                    and (ball.current_pos[0] - event.pos[0]) ** 2
+                    + (ball.current_pos[1] - event.pos[1]) ** 2
+                    > ball.radius**2
+                ):
+                    ball.handle_release(pygame.mouse.get_pos())
             ball.dragging = False
 
+            if self.ball_was_hit and ball.drag_line:
             if self.ball_was_hit and ball.drag_line:
                 self.total_strokes += 1
                 self.ball_was_hit = False
@@ -562,6 +689,7 @@ class GameState:
         obstacles,
         screen,
         hole,
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -576,6 +704,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
@@ -588,6 +717,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
@@ -600,6 +730,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
@@ -612,6 +743,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
@@ -625,5 +757,7 @@ class GameState:
             print("Invalid state:", self.state)
             sys.exit()
 
+    def reset_strokes(self):
+        self.total_strokes = 0
     def reset_strokes(self):
         self.total_strokes = 0

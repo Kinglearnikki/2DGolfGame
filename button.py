@@ -3,6 +3,7 @@ import pygame
 
 class Button:
     def __init__(self, x, y, width, height, color, text, text_color):
+        self.rect = pygame.Rect(x, y, width, height)
         self.x = x
         self.y = y
         self.width = width
@@ -25,3 +26,29 @@ class Button:
             self.y <= mouse_pos[1] <= self.y + self.height
         ):
             reset_ball()
+
+    def is_clicked(self, pos):
+        return self.rect.collidepoint(pos)
+
+class BackButton:
+    def __init__(self, x, y, width, height, color, text, text_color):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.text = text
+        self.text_color = text_color
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+        font = pygame.font.Font(None, 30)
+        text = font.render(self.text, True, self.text_color)
+        text_rect = text.get_rect(
+            center=(self.x + self.width // 2, self.y + self.height // 2)
+        )
+        screen.blit(text, text_rect)
+
+    def is_clicked(self, pos):
+        return self.rect.collidepoint(pos)
