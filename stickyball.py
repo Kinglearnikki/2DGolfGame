@@ -34,7 +34,6 @@ class StickyBall(Ball):
 
     def handle_collision(self, screen_width, screen_height, obstacles):
         # Check collision with obstacles
-        # Check collision with obstacles
         for obstacle in obstacles:
             if (
                 self.current_pos[0] + self.radius >= obstacle.x - self.radius

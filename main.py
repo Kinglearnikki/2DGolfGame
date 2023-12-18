@@ -50,11 +50,12 @@ def reset_ball(game_state, ball):
     ball.drag_line = []
     game_state.reset_strokes()
 
+
 # Reset functions for different levels
 reset_ball_main_game = lambda: reset_ball(game_state, ball_main_game)
-reset_ball_level1 = lambda:  reset_ball(game_state, ball_level1)
-reset_ball_level2 = lambda:  reset_ball(game_state, ball_level2)
-reset_ball_level3 = lambda:  reset_ball(game_state, ball_level3)
+reset_ball_level1 = lambda: reset_ball(game_state, ball_level1)
+reset_ball_level2 = lambda: reset_ball(game_state, ball_level2)
+reset_ball_level3 = lambda: reset_ball(game_state, ball_level3)
 
 # Create hole object
 hole = Hole(396, 80, 25, (0, 0, 0))
@@ -62,7 +63,7 @@ hole = Hole(396, 80, 25, (0, 0, 0))
 # Create obstacles
 obstacles = [
     Obstacle(130, 290, 50, 100, (0, 0, 0), orientation="vertical"),
-    Obstacle(400, 400, 50, 100, (0, 0, 0), orientation="horizontal")
+    Obstacle(400, 400, 50, 100, (0, 0, 0), orientation="horizontal"),
 ]
 
 # Create reset button object
@@ -74,7 +75,7 @@ mainMenu_button = BackButton(10, 65, 100, 50, (255, 0, 0), "Back", (255, 255, 25
 
 # Set game state
 game_state = GameState()
-game_state.state = "intro"
+game_state.state = "level_3"
 
 # Set running flag
 running = True
@@ -84,50 +85,45 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if game_state.state == "intro":
-                game_state.handle_mouse_button_down(event, game_state)
-            elif game_state.state == "main_game":
                 game_state.handle_mouse_button_down(
-                event, ball_main_game, mainMenu_button, reset_button, reset_ball_main_game,
-            )
-            elif game_state.state == "level_1":
-                game_state.handle_mouse_button_down(
-                event, ball_level1, mainMenu_button, reset_button, reset_ball_level1,
-            )
-            elif game_state.state == "level_2":
-                game_state.handle_mouse_button_down(
-                event, ball_level2, mainMenu_button, reset_button, reset_ball_level2,
-            )
-            elif game_state.state == "level_3":
-                game_state.handle_mouse_button_down(
-                event, ball_level3, mainMenu_button, reset_button, reset_ball_level3,
+                    event, game_state, screen=screen, font=font
                 )
-            if game_state.state == "intro":
-                game_state.handle_mouse_button_down(event, game_state)
             elif game_state.state == "main_game":
                 game_state.handle_mouse_button_down(
-                event, ball_main_game, mainMenu_button, reset_button, reset_ball_main_game,
-            )
+                    event,
+                    ball_main_game,
+                    mainMenu_button,
+                    reset_button,
+                    reset_ball_main_game,
+                )
             elif game_state.state == "level_1":
                 game_state.handle_mouse_button_down(
-                event, ball_level1, mainMenu_button, reset_button, reset_ball_level1,
-            )
+                    event,
+                    ball_level1,
+                    mainMenu_button,
+                    reset_button,
+                    reset_ball_level1,
+                )
             elif game_state.state == "level_2":
                 game_state.handle_mouse_button_down(
-                event, ball_level2, mainMenu_button, reset_button, reset_ball_level2,
-            )
+                    event,
+                    ball_level2,
+                    mainMenu_button,
+                    reset_button,
+                    reset_ball_level2,
+                )
             elif game_state.state == "level_3":
                 game_state.handle_mouse_button_down(
-                event, ball_level3, mainMenu_button, reset_button, reset_ball_level3,
-            )
+                    event,
+                    ball_level3,
+                    mainMenu_button,
+                    reset_button,
+                    reset_ball_level3,
+                )
+            elif game_state.state == "scoreboard":
+                game_state.handle_mouse_button_down(event, screen=screen, font=font)
+
         elif event.type == pygame.MOUSEBUTTONUP:
-            if game_state.state == "main_game":
-                game_state.handle_mouse_button_up(event, ball_main_game)
-            elif game_state.state == "level_1":
-                game_state.handle_mouse_button_up(event, ball_level1)
-            elif game_state.state == "level_2":
-                game_state.handle_mouse_button_up(event, ball_level2)
-            elif game_state.state == "level_3":
-                game_state.handle_mouse_button_up(event, ball_level3)
             if game_state.state == "main_game":
                 game_state.handle_mouse_button_up(event, ball_main_game)
             elif game_state.state == "level_1":
@@ -141,19 +137,69 @@ while running:
         game_state.intro(screen, width, height, font)
     elif game_state.state == "main_game":
         game_state.state_manager(
-            ball_main_game, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball_main_game
+            ball_main_game,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball_main_game,
         )
     elif game_state.state == "level_1":
         game_state.state_manager(
-            ball_level1, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball_level1
+            ball_level1,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball_level1,
         )
     elif game_state.state == "level_2":
         game_state.state_manager(
-            ball_level2, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball_level2
+            ball_level2,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball_level2,
         )
     elif game_state.state == "level_3":
         game_state.state_manager(
-            ball_level3, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball_level3
+            ball_level3,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball_level3,
+        )
+
+    elif game_state.state == "scoreboard":
+        game_state.state_manager(
+            ball_level3,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball_level3,
         )
 
     pygame.display.flip()

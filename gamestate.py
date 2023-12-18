@@ -19,6 +19,8 @@ class GameState:
         self.timer_running = False
         self.start_time = 0
         self.elapsed_time = 0
+        self.current_page = 0
+        self.items_per_page = 10
 
     def format_date_time(self, date_str):
         # Parse the datetime from the JSON data
@@ -27,6 +29,72 @@ class GameState:
         time_formatted = full_datetime.strftime("%I:%M %p")  # Format the time
 
         return date_formatted, time_formatted
+
+    def draw_back_button(self, screen, font, width, height):
+        back_button = pygame.Rect((width - 100) / 2, height - 100, 100, 50)
+        pygame.draw.rect(screen, (255, 0, 0), back_button)
+        back_text = font.render("Home", True, (255, 255, 255))
+        text_x = back_button.centerx - back_text.get_width() / 2
+        text_y = back_button.centery - back_text.get_height() / 2
+        screen.blit(back_text, (text_x, text_y))
+        return back_button
+
+    def draw_scoreboard_page(self, screen, font, game_data, width, height):
+        # Clear the screen or draw a background
+        screen.fill((0, 0, 0))
+
+        # Heading
+        heading_font = pygame.font.SysFont("arial", 24)
+        headings = ["Date", "Time", "Level", "Game Time", "Strokes"]
+        heading_y = 50
+        column_widths = [0] * len(headings)
+
+        # Calculate the width of each column
+        column_padding = 30  # Increase padding if needed
+        manual_column_widths = [200, 100, 130, 120, 70]
+
+        for i, heading in enumerate(headings):
+            heading_text = heading_font.render(heading, True, (255, 255, 255))
+            column_widths[i] = max(manual_column_widths[i], heading_text.get_width())
+
+        # Draw Headings
+        x_positions = [50]
+        for i in range(1, len(column_widths)):
+            x_positions.append(x_positions[i - 1] + column_widths[i - 1])
+        for i, heading in enumerate(headings):
+            heading_text = heading_font.render(heading, True, (255, 255, 255))
+            screen.blit(heading_text, (x_positions[i], heading_y))
+
+        # Calculate start and end indices for the current page
+        start_index = self.current_page * self.items_per_page
+        end_index = min(start_index + self.items_per_page, len(game_data))
+        row_y = 80
+
+        # Display each row of game data for the current page
+        for i in range(start_index, end_index):
+            row = game_data[i]
+            formatted_date, formatted_time = self.format_date_time(row["date"])
+            texts = [
+                formatted_date,
+                formatted_time,
+                row["level"],
+                row["time"],
+                str(row["strokes"]),
+            ]
+            for j, text in enumerate(texts):
+                text_surface = font.render(text, True, (255, 255, 255))
+                screen.blit(text_surface, (x_positions[j], row_y))
+            row_y += 30
+
+        # Calculate if Next button should be enabled
+        total_pages = (len(game_data) + self.items_per_page - 1) // self.items_per_page
+        enable_next = self.current_page < total_pages - 1
+
+        # Draw navigation buttons (Previous and Next)
+        prev_button, next_button = self.draw_pagination_buttons(
+            screen, font, width, height, enable_next
+        )
+        return prev_button, next_button
 
     def read_game_data(self):
         try:
@@ -99,128 +167,95 @@ class GameState:
 
         # Create a button
         button_font = pygame.font.Font(None, 30)
-        button_rect = pygame.Rect(width // 2 - 50, height // 2 + 20, 100, 40)
-        pygame.draw.rect(screen, (0, 128, 255), button_rect)  # Blue button
-        button_text = button_font.render("Start Game", True, (255, 255, 255))
-        button_text_rect = button_text.get_rect(center=button_rect.center)
-        screen.blit(button_text, button_text_rect)
 
-        # Create the "Scoreboard" button below the current button
-        scoreboard_rect = pygame.Rect(width // 2 - 50, height // 2 + 80, 100, 40)
-        pygame.draw.rect(screen, (0, 128, 255), scoreboard_rect)  # Blue button
-        scoreboard_text = button_font.render("Scoreboard", True, (255, 255, 255))
-        scoreboard_text_rect = scoreboard_text.get_rect(center=scoreboard_rect.center)
-        screen.blit(scoreboard_text, scoreboard_text_rect)
+        # Create the "Start Game" button
+        button_text_start = "Start Game"
+        button_text_surface_start = button_font.render(
+            button_text_start, True, (255, 255, 255)
+        )
+        button_width_start = (
+            button_text_surface_start.get_width() + 20
+        )  # Add some padding
+        button_rect_start = pygame.Rect(
+            width // 2 - button_width_start // 2,
+            height // 2 + 20,
+            button_width_start,
+            40,
+        )
+        pygame.draw.rect(screen, (0, 128, 255), button_rect_start, 0) 
+        button_text_rect_start = button_text_surface_start.get_rect(
+            center=button_rect_start.center
+        )
+        screen.blit(button_text_surface_start, button_text_rect_start)
 
-        # Check for button click
+        button_text_scoreboard = "Scoreboard"
+        button_text_surface_scoreboard = button_font.render(
+            button_text_scoreboard, True, (255, 255, 255)
+        )
+        button_width_scoreboard = (
+            button_text_surface_scoreboard.get_width() + 20
+        )  # Add some padding
+        button_rect_scoreboard = pygame.Rect(
+            width // 2 - button_width_scoreboard // 2,
+            height // 2 + 80,
+            button_width_scoreboard,
+            40,
+        )
+        pygame.draw.rect(
+            screen, (0, 128, 255), button_rect_scoreboard, 0
+        ) 
+        button_text_rect_scoreboard = button_text_surface_scoreboard.get_rect(
+            center=button_rect_scoreboard.center
+        )
+        screen.blit(button_text_surface_scoreboard, button_text_rect_scoreboard)
+
         mouse_pos = pygame.mouse.get_pos()
-        if button_rect.collidepoint(mouse_pos):
+        if button_text_rect_start.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0]:
                 self.state = "main_game"
 
-        elif scoreboard_rect.collidepoint(mouse_pos):
+        elif button_text_rect_scoreboard.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0]:
                 self.state = "scoreboard"
 
         # Update the display
         pygame.display.flip()
 
+    def draw_pagination_buttons(self, screen, font, width, height, enable_next):
+        prev_button = pygame.Rect(50, height - 50, 100, 30)
+        pygame.draw.rect(screen, (100, 100, 100), prev_button)
+        prev_text = font.render("Prev", True, (255, 255, 255))
+        text_x = prev_button.centerx - prev_text.get_width() / 2
+        text_y = prev_button.centery - prev_text.get_height() / 2
+
+        screen.blit(prev_text, (text_x, text_y))
+
+        # Draw Next Button if enabled
+        if enable_next:
+            next_button = pygame.Rect(width - 150, height - 50, 100, 30)
+            pygame.draw.rect(screen, (100, 100, 100), next_button)
+            next_text = font.render("Next", True, (255, 255, 255))
+            text_x = next_button.centerx - next_text.get_width() / 2
+            text_y = next_button.centery - next_text.get_height() / 2
+            screen.blit(next_text, (text_x, text_y))
+            return prev_button, next_button
+        else:
+            return prev_button, None
+
     def scoreboard(self, screen, font, width, height):
         game_data = self.read_game_data()
+        prev_button, next_button = self.draw_scoreboard_page(
+            screen, font, game_data, width, height
+        )
+        back_button = self.draw_back_button(screen, font, width, height)
+        return prev_button, next_button, back_button
 
-        # Clear the screen or draw a background
-        screen.fill((0, 0, 0))  # Fill with black color
-
-        # Heading
-        heading_font = pygame.font.SysFont("arial", 24)
-        headings = ["Date", "Time", "Level", "Game Time", "Strokes"]
-        heading_y = 50
-        column_widths = [0] * len(headings)
-
-        # Calculate the width of each column
-        for i, heading in enumerate(headings):
-            heading_text = heading_font.render(heading, True, (255, 255, 255))
-            column_widths[i] = max(column_widths[i], heading_text.get_width())
-
-        for row in game_data:
-            formatted_date, formatted_time = self.format_date_time(row["date"])
-            for i, heading in enumerate(headings):
-                if heading == "Date":
-                    row_text = formatted_date
-                elif heading == "Time":
-                    row_text = formatted_time
-                elif heading == "Game Time":
-                    row_text = row["time"]
-                else:
-                    row_text = str(row[heading.lower()])
-                row_text_rendered = font.render(row_text, True, (255, 255, 255))
-                column_widths[i] = max(column_widths[i], row_text_rendered.get_width())
-
-        # Add some padding to each column
-        column_padding = 20
-        column_widths = [width + column_padding for width in column_widths]
-
-        # Calculate starting x position for each column
-        x_positions = [50]
-        for i in range(1, len(column_widths)):
-            x_positions.append(x_positions[i - 1] + column_widths[i - 1])
-
-        # Draw Headings
-        for i, heading in enumerate(headings):
-            heading_text = heading_font.render(heading, True, (255, 255, 255))
-            screen.blit(heading_text, (x_positions[i], heading_y))
-
-        # Display each row of game data
-        row_y = 80
-        for row in game_data:
-            formatted_date, formatted_time = self.format_date_time(row["date"])
-            screen.blit(
-                font.render(formatted_date, True, (255, 255, 255)),
-                (x_positions[0], row_y),
-            )
-            screen.blit(
-                font.render(formatted_time, True, (255, 255, 255)),
-                (x_positions[1], row_y),
-            )
-            screen.blit(
-                font.render(row["level"], True, (255, 255, 255)),
-                (x_positions[2], row_y),
-            )
-            screen.blit(
-                font.render(row["time"], True, (255, 255, 255)), (x_positions[3], row_y)
-            )
-            screen.blit(
-                font.render(str(row["strokes"]), True, (255, 255, 255)),
-                (x_positions[4], row_y),
-            )
-
-            row_y += 30
-
-        back_button_font = pygame.font.Font(None, 30)
-        back_button_text = back_button_font.render("Back", True, (255, 255, 255))
-        back_button_rect = back_button_text.get_rect()
-        back_button_rect.x = 50
-        back_button_rect.y = height - 60
-        pygame.draw.rect(
-            screen, (0, 128, 255), back_button_rect.inflate(20, 20)
-        )  # Blue button
-        screen.blit(back_button_text, back_button_rect)
-
-        pygame.display.flip()
-
-        # Handle events for the "Back" button
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = event.pos
-                    if back_button_rect.inflate(20, 20).collidepoint(mouse_pos):
-                        self.state = "intro"
-                        running = False
+    # Method to change the page
+    def change_page(self, direction):
+        if direction == "next":
+            self.current_page += 1
+        elif direction == "prev" and self.current_page > 0:
+            self.current_page -= 1
 
     def manage_timer(self, screen, font, width):
         if self.timer_running:
@@ -239,7 +274,7 @@ class GameState:
         obstacles,
         screen,
         hole,
-        mainMenu_button, 
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -409,7 +444,7 @@ class GameState:
         obstacles,
         screen,
         hole,
-        mainMenu_button, 
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -428,7 +463,16 @@ class GameState:
         self.manage_timer(screen, font, width)
         # Call the common main_game method
         self.main_game(
-            ball, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball
+            ball,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball,
         )
 
     def level_2(
@@ -437,7 +481,7 @@ class GameState:
         obstacles,
         screen,
         hole,
-        mainMenu_button, 
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -456,7 +500,16 @@ class GameState:
         self.manage_timer(screen, font, width)
         # Call the common main_game method
         self.main_game(
-            ball, obstacles, screen, hole, mainMenu_button, reset_button, font, width, height, reset_ball
+            ball,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball,
         )
 
     def level_3(
@@ -465,7 +518,7 @@ class GameState:
         obstacles,
         screen,
         hole,
-        mainMenu_button, 
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -486,11 +539,29 @@ class GameState:
         self.manage_timer(screen, font, width)
         # Call the common main_game method
         self.main_game(
-            ball, obstacles, screen, hole, mainMenu_button,  reset_button, font, width, height, reset_ball
+            ball,
+            obstacles,
+            screen,
+            hole,
+            mainMenu_button,
+            reset_button,
+            font,
+            width,
+            height,
+            reset_ball,
         )
 
     def handle_mouse_button_down(
-        self, event, ball=None, mainMenu_button=None, reset_button=None, reset_ball=None, reset_timer=None):
+        self,
+        event,
+        ball=None,
+        mainMenu_button=None,
+        reset_button=None,
+        reset_ball=None,
+        reset_timer=None,
+        screen=None,
+        font=None,
+    ):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.state == "intro":
                 pass
@@ -506,12 +577,12 @@ class GameState:
                     ball.drag_line = [ball.current_pos]
                     self.ball_was_hit = True
                 reset_button.handle_click(pygame.mouse.get_pos(), reset_ball)
-                    
+
                 mouse_pos = pygame.mouse.get_pos()
                 if reset_button.is_clicked(mouse_pos):
                     self.timer_running = False
                     self.elapsed_time = 0
-                    
+
                 mouse_pos = pygame.mouse.get_pos()
                 if mainMenu_button.is_clicked(mouse_pos):
                     self.state = "intro"
@@ -530,7 +601,7 @@ class GameState:
                     ball.drag_line = [ball.current_pos]
                     self.ball_was_hit = True
                 reset_button.handle_click(pygame.mouse.get_pos(), reset_ball)
-                    
+
                 mouse_pos = pygame.mouse.get_pos()
                 if reset_button.is_clicked(mouse_pos):
                     self.timer_running = False
@@ -554,7 +625,7 @@ class GameState:
                     ball.drag_line = [ball.current_pos]
                     self.ball_was_hit = True
                 reset_button.handle_click(pygame.mouse.get_pos(), reset_ball)
-                
+
                 mouse_pos = pygame.mouse.get_pos()
                 if reset_button.is_clicked(mouse_pos):
                     self.timer_running = False
@@ -590,6 +661,21 @@ class GameState:
                     self.timer_running = False
                     self.elapsed_time = 0
 
+            if self.state == "scoreboard":
+                width, height = 800, 600
+                prev_button, next_button, back_button = self.scoreboard(
+                    screen, font, width, height
+                )
+
+                if prev_button.collidepoint(event.pos):
+                    self.change_page("prev")
+                elif next_button and next_button.collidepoint(event.pos):
+                    self.change_page("next")
+                elif back_button and back_button.collidepoint(event.pos):
+                    self.state = "intro"  # Go back to the intro screen
+
+                self.scoreboard(screen, font, width, height)
+
     def handle_mouse_button_up(self, event, ball):
         if event.type == pygame.MOUSEBUTTONUP:
             if ball.dragging:
@@ -616,7 +702,7 @@ class GameState:
         obstacles,
         screen,
         hole,
-        mainMenu_button, 
+        mainMenu_button,
         reset_button,
         font,
         width,
@@ -631,7 +717,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
-                mainMenu_button, 
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
@@ -644,7 +730,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
-                mainMenu_button, 
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
@@ -657,7 +743,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
-                mainMenu_button, 
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
@@ -670,7 +756,7 @@ class GameState:
                 obstacles,
                 screen,
                 hole,
-                mainMenu_button, 
+                mainMenu_button,
                 reset_button,
                 font,
                 width,
