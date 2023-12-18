@@ -13,7 +13,7 @@ _Updated Dec 17, 2023 11:10PM_
 - Add different Balls with different attributes
 - Add terrains
 - Add scorecard
-- Add database to save scorecard
+- [DONE SWITCHED TO JSON FILE SAVING]Add database to save scorecard
 - Add scoreboard (inside scoreboard kay ang sud sa scorecard na makuha sa database)
 
 ---
