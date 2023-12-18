@@ -2,9 +2,6 @@ import os
 import pygame
 from ball import Ball
 
-# import random
-
-
 class StickyBall(Ball):
     def __init__(
         self,
@@ -21,7 +18,7 @@ class StickyBall(Ball):
         self.speed_multiplier = speed_multiplier
 
         current_directory = os.getcwd()
-        image_path = os.path.join(current_directory, "images", image_filename)
+        image_path = os.path.join(current_directory, "2DGolfGame\images", image_filename)
 
         try:
             self.image = pygame.image.load(image_path)

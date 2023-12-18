@@ -30,6 +30,7 @@ class Button:
     def is_clicked(self, pos):
         return self.rect.collidepoint(pos)
 
+# for the back to main menu button
 class BackButton:
     def __init__(self, x, y, width, height, color, text, text_color):
         self.rect = pygame.Rect(x, y, width, height)
