@@ -5,7 +5,7 @@ _Updated Dec 17, 2023 11:10PM_
 
 - [DONE]Add timer
 - [DONE]Add number of strokes
-- Add different levels
+- [DONE]Add different levels
 - Add menu to enter different levels
 - [DONE]Add back to main menu button (in each level)
 - [DONE]Fix timer to reset when back and reset button are pressed
