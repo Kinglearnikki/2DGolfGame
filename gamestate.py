@@ -82,7 +82,7 @@ class GameState:
     def intro(self, screen, width, height, font):
         # Set image path
         current_directory = os.getcwd()
-        image_path = os.path.join(current_directory, "2DGolfGame\images", "bg.png")
+        image_path = os.path.join(current_directory, "images", "bg.png")
 
         # Load and resize background image
         image = pygame.image.load(image_path)
@@ -248,7 +248,7 @@ class GameState:
     ):
         # Set image path
         current_directory = os.getcwd()
-        image_path = os.path.join(current_directory, "2DGolfGame\images", "bg.png")
+        image_path = os.path.join(current_directory, "images", "bg.png")
 
         # Load and resize background image
         image = pygame.image.load(image_path)

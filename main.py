@@ -19,7 +19,7 @@ width, height = 800, 600
 current_directory = os.getcwd()
 
 # Set image path
-image_path = os.path.join(current_directory, "2DGolfGame\images", "bg.png")
+image_path = os.path.join(current_directory, "images", "bg.png")
 
 # Create screen
 screen = pygame.display.set_mode((width, height))
